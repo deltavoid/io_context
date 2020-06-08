@@ -37,16 +37,26 @@ NotifyHandler::~NotifyHandler()
 int NotifyHandler::handle(uint32_t events)
 {
     acknowledge();
-
-    while (!notify_queue.empty())
-        io_context->internal_queue.push(notify_queue.take());
+    
+    {
+        std::lock_guard<std::mutex> guard(mutex);
+        while (!notify_queue.empty())
+        {
+            io_context->put(notify_queue.front());
+            notify_queue.pop();
+        }
+    }
     
     return 0;
 }
 
 void NotifyHandler::put(Func func)
 {
-    notify_queue.put(func);
+    // notify_queue.put(func);
+    {
+        std::lock_guard<std::mutex> guard(mutex);
+        notify_queue.push(func);
+    }
 
     notify();
 }

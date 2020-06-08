@@ -4,12 +4,12 @@
 #include <queue>
 #include <thread>
 #include <mutex>
-#include <condition_variable>
+// #include <condition_variable>
 #include <functional>
 
 
 
-#include "blocking_queue.hpp"
+// #include "blocking_queue.hpp"
 
 
 typedef std::function<void()> Func;
@@ -27,7 +27,9 @@ class EpollHandler
 class NotifyHandler : public EpollHandler
 {public:
     int notify_fd;
-    BlockingQueue<Func> notify_queue;
+    // BlockingQueue<Func> notify_queue;
+    std::queue<Func> notify_queue;
+    std::mutex mutex;
     IOContext* io_context;
 
     NotifyHandler(IOContext* io_context);
