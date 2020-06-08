@@ -19,7 +19,7 @@ NotifyHandler::NotifyHandler(IOContext* io_context)
     {   perror("epoll_ctl_add notify_fd error");
     }
 
-    io_context->notify_handler = this;
+    // io_context->notify_handler = this;
 
 }
 
