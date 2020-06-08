@@ -73,12 +73,14 @@ void NotifyHandler::acknowledge()
 IOContext::IOContext()
 {
     epoll_fd = epoll_create1(0);
+    notify_handler = new NotifyHandler(this);
     running = true;
 
 }
 
 IOContext::~IOContext()
 {
+    delete notify_handler;
     close(epoll_fd);
 }
 
