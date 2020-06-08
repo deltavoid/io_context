@@ -40,14 +40,15 @@ class NotifyHandler : public EpollHandler
 class IOContext
 {public:
     int epoll_fd;
-    
-    NotifyHandler notify_handler;
+    bool running;    
 
     std::queue<Func> internal_queue;
 
     IOContext();
 
     ~IOContext();
+
+    void run();
 
 
 };
