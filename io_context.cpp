@@ -34,6 +34,14 @@ NotifyHandler::~NotifyHandler()
 
 int NotifyHandler::handle(uint32_t events)
 {
+    uint64_t val = 0;
+    if  (read(notify_fd, &val, sizeof(val)) < 0)
+    {   perror("read eventfd error");
+    }
+    
+    while (!notify_queue.empty())
+        io_context->internal_queue.push(notify_queue.take());
+    
     return 0;
 }
 
