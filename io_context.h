@@ -48,7 +48,7 @@ class IOContext
 {public:
     int epoll_fd;
     bool running;    
-
+    NotifyHandler* notify_handler;
     std::queue<Func> internal_queue;
 
     IOContext();
@@ -57,6 +57,7 @@ class IOContext
 
     void run();
 
+    void put(Func func);
 
 };
 

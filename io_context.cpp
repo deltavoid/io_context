@@ -19,6 +19,8 @@ NotifyHandler::NotifyHandler(IOContext* io_context)
     {   perror("epoll_ctl_add notify_fd error");
     }
 
+    io_context->notify_handler = this;
+
 }
 
 
@@ -83,18 +85,18 @@ IOContext::~IOContext()
 
 void IOContext::run()
 {
-    printf("IOContext::run: 1\n");
+    printf("IOContext::run: 1, thread: %lx\n", pthread_self());
     const int internal_events_num = 1024;
     struct epoll_event internal_events[internal_events_num];
 
     while (running)
     {
-        printf("IOContext::run: 2\n");
+        printf("IOContext::run: 2, thread: %lx\n", pthread_self());
         int num = epoll_wait(epoll_fd, internal_events, internal_events_num, -1);
         if  (num < 0)
             perror("epoll_wait error");
         
-        printf("IOContext::run: 3\n");
+        printf("IOContext::run: 3, thread: %lx\n", pthread_self());
         for (int i = 0; i < num; i++)
         {
             struct epoll_event& ev = internal_events[i];
@@ -104,7 +106,7 @@ void IOContext::run()
                 delete handler;
         }
 
-        printf("IOContext::run: 4\n");
+        printf("IOContext::run: 4, thread: %lx\n", pthread_self());
         while (!internal_queue.empty())
         {
             Func func = internal_queue.front();
@@ -113,8 +115,13 @@ void IOContext::run()
             func();
         }
 
-        printf("IOContext::run: 5\n");
+        printf("IOContext::run: 5, thread: %lx\n", pthread_self());
     }
 
-    printf("IOContext::run: 6\n");
+    printf("IOContext::run: 6, thread: %lx\n", pthread_self());
+}
+
+void IOContext::put(Func func)
+{
+    internal_queue.push(func);
 }
