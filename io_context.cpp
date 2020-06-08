@@ -19,8 +19,6 @@ NotifyHandler::NotifyHandler(IOContext* io_context)
     {   perror("epoll_ctl_add notify_fd error");
     }
 
-    // io_context->notify_handler = this;
-
 }
 
 
@@ -52,7 +50,6 @@ int NotifyHandler::handle(uint32_t events)
 
 void NotifyHandler::put(Func func)
 {
-    // notify_queue.put(func);
     {
         std::lock_guard<std::mutex> guard(mutex);
         notify_queue.push(func);

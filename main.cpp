@@ -47,17 +47,13 @@ void process(IOContext* io_context1, IOContext* io_context2)
 int main()
 {
     IOContext io_context1;
-    // NotifyHandler notify_handler1(&io_context1);
     std::thread io_thread1( 
             [&io_context1](){ io_context1.run(); } );
 
     IOContext io_context2;
-    // NotifyHandler notify_handler2(&io_context2);
     std::thread io_thread2( 
             [&io_context2](){ io_context2.run(); } );
 
-    // notify_handler.put(
-    //         [](){ printf("hello world, thread: %lx!\n", pthread_self());} );
     io_context1.notify_handler->put(
         [&io_context1, &io_context2](){ process(&io_context1, &io_context2);} );
 
