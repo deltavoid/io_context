@@ -23,13 +23,16 @@ int main()
 
     NotifyHandler notify_handler(&io_context);
 
-    notify_handler.notify_queue.put(
-            [](){ printf("hello world!\n");});
-    uint64_t val = 1;
-    if  (write(notify_handler.notify_fd, &val, sizeof(val)) < 0)
-    {   perror("write eventfd error");
-    }
+    // notify_handler.notify_queue.put(
+    //         [](){ printf("hello world, thread: %lx!\n", pthread_self());});
+    // uint64_t val = 1;
+    // if  (write(notify_handler.notify_fd, &val, sizeof(val)) < 0)
+    // {   perror("write eventfd error");
+    // }
+    notify_handler.put(
+            [](){ printf("hello world, thread: %lx!\n", pthread_self());} );
 
+    printf("main: thread_id: %lx\n", pthread_self());
     io_thread.join();
 
 

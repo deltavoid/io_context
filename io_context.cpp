@@ -34,16 +34,37 @@ NotifyHandler::~NotifyHandler()
 
 int NotifyHandler::handle(uint32_t events)
 {
-    uint64_t val = 0;
-    if  (read(notify_fd, &val, sizeof(val)) < 0)
-    {   perror("read eventfd error");
-    }
-    
+    acknowledge();
+
     while (!notify_queue.empty())
         io_context->internal_queue.push(notify_queue.take());
     
     return 0;
 }
+
+void NotifyHandler::put(Func func)
+{
+    notify_queue.put(func);
+
+    notify();
+}
+
+void NotifyHandler::notify()
+{
+    uint64_t val = 1;
+    if  (write(notify_fd, &val, sizeof(val)) != sizeof(val))
+    {   perror("write eventfd error");
+    }
+}
+
+void NotifyHandler::acknowledge()
+{
+    uint64_t val = 0;
+    if  (read(notify_fd, &val, sizeof(val)) != sizeof(val))
+    {   perror("read eventfd error");
+    }
+}
+
 
 
 

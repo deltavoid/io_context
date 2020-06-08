@@ -8,6 +8,7 @@
 #include <functional>
 
 
+
 #include "blocking_queue.hpp"
 
 
@@ -34,6 +35,12 @@ class NotifyHandler : public EpollHandler
     virtual ~NotifyHandler();
 
     virtual int handle(uint32_t events);
+
+    void put(Func func);
+    
+    void notify();
+    void acknowledge();
+    
 };
 
 
