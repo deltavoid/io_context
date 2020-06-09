@@ -12,7 +12,7 @@ class Acceptor : public EpollHandler
     IOContext* io_context;
 
 
-    Acceptor(IOContext* io_context, struct sockaddr_in* addr);
+    Acceptor(IOContext* io_context, struct sockaddr_in* addr, bool listen_ = false);
     virtual ~Acceptor();
 
     virtual int handle(uint32_t events);

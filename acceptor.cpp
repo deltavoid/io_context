@@ -11,7 +11,7 @@
 
 
 
-Acceptor::Acceptor(IOContext* io_context, struct sockaddr_in* addr)
+Acceptor::Acceptor(IOContext* io_context, struct sockaddr_in* addr, bool listen_)
     : io_context(io_context)
 {
     fd = socket(AF_INET, SOCK_STREAM | SOCK_NONBLOCK, 0);
@@ -21,6 +21,10 @@ Acceptor::Acceptor(IOContext* io_context, struct sockaddr_in* addr)
 
     if  (bind(fd, (struct sockaddr*)addr, (socklen_t)sizeof(*addr)) < 0)
     {    perror("bind error");
+    }
+
+    if  (listen_)
+    {   listen();
     }
 
     struct epoll_event ev;

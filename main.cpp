@@ -40,11 +40,7 @@ int main(int argc, char** argv)
     std::thread io_thread(
         [&io_context](){ io_context.run();} );
 
-    // Acceptor acceptor(&io_context, &addr);
-    Acceptor* acceptor = new Acceptor(&io_context, &addr);
-    acceptor->listen();
-
-
+    Acceptor* acceptor = new Acceptor(&io_context, &addr, true);
 
 
     io_thread.join();
