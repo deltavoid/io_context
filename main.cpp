@@ -42,7 +42,7 @@ int main(int argc, char** argv)
 
     // Acceptor acceptor(&io_context, &addr);
     Acceptor* acceptor = new Acceptor(&io_context, &addr);
-    // acceptor.listen();
+    acceptor->listen();
 
 
 
