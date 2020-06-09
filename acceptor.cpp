@@ -44,7 +44,9 @@ Acceptor::~Acceptor()
 
 int Acceptor::handle(uint32_t events)
 {
-    if  (events & ~EPOLLIN != 0)  return -1;
+    printf("Acceptor::handle: 1, events: 0x%x\n", events);
+    if  (events & ~EPOLLIN)  return -1;
+    printf("Acceptor::handle: 2\n");
     int ret = 0;
 
     if  (events & EPOLLIN)

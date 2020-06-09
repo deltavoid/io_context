@@ -110,9 +110,14 @@ void IOContext::run()
         {
             struct epoll_event& ev = internal_events[i];
             EpollHandler* handler = (EpollHandler*)ev.data.ptr;
+            int ret = 0;
 
-            if  (handler->handle(ev.events) < 0)
+            if  ((ret = handler->handle(ev.events)) < 0)
+            {
+                printf("handler %lx return %d, to be deleted\n", 
+                        (unsigned long)handler, ret);
                 delete handler;
+            }
         }
 
         printf("IOContext::run: 4, thread: %lx\n", pthread_self());

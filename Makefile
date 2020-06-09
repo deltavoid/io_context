@@ -1,7 +1,7 @@
 
 
 run: build
-	./main
+	./main 9000
 
 build: main
 
