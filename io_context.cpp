@@ -1,4 +1,5 @@
 #include "io_context.h"
+#include "timer.h"
 
 #include <unistd.h>
 #include <sys/types.h>
@@ -81,6 +82,7 @@ IOContext::IOContext()
 {
     epoll_fd = epoll_create1(0);
     notify_handler = new NotifyHandler(this);
+    time_handler = new TimeHandler(this);
     running = true;
 
 }
@@ -100,6 +102,7 @@ void IOContext::run()
 
     while (running)
     {
+        printf("-----------------------------------------------------\n");
         printf("IOContext::run: 2, thread: %lx\n", pthread_self());
         int num = epoll_wait(epoll_fd, internal_events, internal_events_num, -1);
         if  (num < 0)

@@ -43,11 +43,14 @@ class NotifyHandler : public EpollHandler
 };
 
 
+class TimeHandler;
+
 class IOContext
 {public:
     int epoll_fd;
     bool running;    
     NotifyHandler* notify_handler;
+    TimeHandler* time_handler;
     std::queue<Func> internal_queue;
 
     IOContext();

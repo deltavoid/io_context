@@ -5,5 +5,5 @@ run: build
 
 build: main
 
-main: main.cpp io_context.cpp  acceptor.cpp connection.cpp alternate_test.cpp
+main: main.cpp io_context.cpp  timer.cpp acceptor.cpp connection.cpp alternate_test.cpp
 	g++ -o $@ $^ -pthread
