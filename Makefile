@@ -23,3 +23,4 @@ run_alternate_test: build
 
 run_acceptor_test: build
 	$(BUILD_DIR)/examples/acceptor_test 8192
+

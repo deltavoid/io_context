@@ -47,7 +47,7 @@ static void process(IOContext* io_context1, IOContext* io_context2)
 
 
 
-void alternate_test()
+int main(int argc, char** argv)
 {
     IOContext io_context1;
     std::thread io_thread1( 
@@ -63,38 +63,8 @@ void alternate_test()
     printf("main: thread_id: %lx\n", pthread_self());
     io_thread1.join();
     io_thread2.join();
-}
-
-
-
-
-int main(int argc, char** argv)
-{
-    alternate_test();
-
-    // if  (argc < 2)
-    // {   printf("usage: %s <port>\n", argv[0]);
-    //     return 0;
-    // }
-
-    // int _port = 0;
-    // if  (sscanf(argv[1], "%d", &_port) < 0) perror("bad port");
-
-    // struct sockaddr_in addr;
-    // addr.sin_family = AF_INET;
-    // addr.sin_addr.s_addr = INADDR_ANY;
-    // addr.sin_port = htons((short)_port);
-    // bzero(&(addr.sin_zero), sizeof(addr.sin_zero));
-
-
-    // IOContext io_context;
-    // std::thread io_thread(
-    //     [&io_context](){ io_context.run();} );
-
-    // Acceptor* acceptor = new Acceptor(&io_context, &addr, true);
-
-
-    // io_thread.join();
 
     return 0;
 }
+
+
