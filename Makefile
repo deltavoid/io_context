@@ -9,9 +9,9 @@ BUILD_DIR:=build
 
 
 build: $(BUILD_DIR)/Makefile
-	cd $(BUILD_DIR) && make --trace
+	cd $(BUILD_DIR) && make
 
-$(BUILD_DIR)/Makefile:
+$(BUILD_DIR)/Makefile: CMakeLists.txt
 	mkdir -p $(BUILD_DIR) && cmake -S . -B $(BUILD_DIR)
 
 clean:
