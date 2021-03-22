@@ -1,11 +1,9 @@
 
 
-BUILD_DIR:=build
+BUILD_DIR?=build
 
+default: build
 
-
-# run: build
-# 	./main 9000
 
 
 build: $(BUILD_DIR)/Makefile
@@ -19,8 +17,5 @@ clean:
 
 
 
-
-# build: main
-
-# main: main.cpp io_context.cpp  timer.cpp acceptor.cpp connection.cpp alternate_test.cpp
-# 	g++ -o $@ $^ -pthread
+run_alternate_test: build
+	$(BUILD_DIR)/examples/alternate_test 8192
