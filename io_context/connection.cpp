@@ -4,6 +4,7 @@
 #include <sys/epoll.h>
 
 #include "connection.h"
+#include "ring_buffer.h"
 
 
 
