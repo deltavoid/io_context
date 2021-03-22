@@ -47,19 +47,21 @@ int Connection::handle(uint32_t events)
 
     printf("Connection::handle: 2\n");
     if  (events & EPOLLOUT)
-    {   ret = handle_write();
-        if  (ret < 0)  
-            return ret;
-    }
-
-    printf("Connection::handle: 2\n");
-    if  (events & EPOLLIN)
-    {   ret = handle_read();
+    {   printf("Connection %lx get EPOLLOUT\n", (void*)this);
+        ret = handle_write();
         if  (ret < 0)  
             return ret;
     }
 
     printf("Connection::handle: 3\n");
+    if  (events & EPOLLIN)
+    {   printf("Connection %lx get EPOLLIN\n", (void*)this);
+        ret = handle_read();
+        if  (ret < 0)  
+            return ret;
+    }
+
+    printf("Connection::handle: 4\n");
     return 0;
 }
 
@@ -79,6 +81,7 @@ int Connection::handle(uint32_t events)
 
 int Connection::handle_read()
 {
+    printf("Connection::handle_read: 1\n");
     could_read = true;
     
     int recv_len = recv_buf();
@@ -86,11 +89,13 @@ int Connection::handle_read()
     if  (recv_len < 0)
         return -1;
 
+    printf("Connection::handle_read: 2\n");
     return 0;
 }
 
 int Connection::handle_write()
 {
+    printf("Connection::handle_write: 1\n");
     could_write = true;
 
     int send_len = send_buf();
@@ -98,30 +103,40 @@ int Connection::handle_write()
     if  (send_len < 0)
         return -1;
 
+    printf("Connection::handle_write: 2\n");
     return 0;
 }
 
 
 int Connection::recv_buf()
 {
+    printf("Connection::recv_buf: 1\n");
     if  (!check_read())
+    {
+        printf("Connection::recv_buf: 2\n");
         return 0;
+    }
+        
 
+    printf("Connection::recv_buf: 3\n");
     // at this stage, the buf is not full and fd is readable.
 
     int recv_len = 0, recv_total = 0;
 
-    while ((recv_len = send_buf_once()) > 0)
+    while ((recv_len = recv_buf_once()) > 0)
     {
+        printf("Connection::recv_buf_once return %d\n", recv_len);
         recv_total += recv_len;
     }
 
     if  (recv_len < 0)
         return -1;
 
+    printf("Connection::recv_buf: 4\n");
     if  (check_write())
         io_context->put( [this]() { this->send_buf();} );
 
+    printf("Connection::recv_buf: 5, end\n");
     return recv_total;
 }
 
@@ -129,23 +144,32 @@ int Connection::recv_buf()
 // buf is not empty entry;
 int Connection::send_buf()
 {
+    printf("Connection::send_buf: 1\n");
     if  (!check_write())
+    {
+        printf("Connection::send_buf: 2\n");
         return 0;
+    }
+        
 
+    printf("Connection::send_buf: 3\n");
     // at this stage, buf is not empty and fd is writable.
 
     int send_len = 0, send_total = 0;
     while ((send_len = send_buf_once()) > 0)
     {
+        printf("Connection::send_buf_once return %d\n", send_len);
         send_total += send_len;
     }
 
     if  (send_len < 0)
         return -1;
 
+    printf("Connection::send_buf: 4\n");
     if  (check_read())
         io_context->put( [this]() { this->recv_buf(); } );
 
+    printf("Connection::send_buf: 5, end\n");
     return send_total;
 }
 
@@ -175,7 +199,7 @@ int Connection::recv_buf_once()
             .msg_controllen = 0
         };
         int recv_len = recvmsg(fd, &msg, 0);
-        printf("Connection::recv_buf, recv_len: %d\n", recv_len);
+        printf("Connection::recv_buf_once, recv_len: %d\n", recv_len);
 
 
         if  (recv_len == 0)
@@ -183,7 +207,12 @@ int Connection::recv_buf_once()
         }
         else if  (recv_len < 0)
         {   if  (errno == EAGAIN || errno == EWOULDBLOCK)
+            {
+                printf("Connection::recv_buf_once, get EAGAIN\n");
+                could_read = false;
                 recv_len = 0;
+            }
+                
             else
                 return -1;
         }
@@ -217,12 +246,13 @@ int Connection::send_buf_once()
             .msg_controllen = 0
         };
         int send_len = sendmsg(fd, &msg, 0);
-        printf("Connection::send_buf, send_len: %d\n", send_len);
+        printf("Connection::send_buf_once, send_len: %d\n", send_len);
                 
     if  (send_len < 0)
         {
             if  (errno == EAGAIN || errno == EWOULDBLOCK)
             {   
+                printf("Connection::send_buf_once, get EAGAIN\n");
                 could_write = false;
                 send_len = 0;
             }
