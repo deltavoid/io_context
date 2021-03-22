@@ -2,8 +2,9 @@
 
 BUILD_DIR?=build
 
-default: build
 
+.PHONY: build
+default: build
 
 
 build: $(BUILD_DIR)/Makefile
@@ -18,4 +19,7 @@ clean:
 
 
 run_alternate_test: build
-	$(BUILD_DIR)/examples/alternate_test 8192
+	$(BUILD_DIR)/examples/alternate_test
+
+run_acceptor_test: build
+	$(BUILD_DIR)/examples/acceptor_test 8192
