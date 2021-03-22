@@ -82,7 +82,7 @@ IOContext::IOContext()
 {
     epoll_fd = epoll_create1(0);
     notify_handler = new NotifyHandler(this);
-    time_handler = new TimeHandler(this);
+    // time_handler = new TimeHandler(this);
     running = true;
 
 }
