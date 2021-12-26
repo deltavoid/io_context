@@ -24,7 +24,7 @@ class EpollHandler
 
 class NotifyHandler : public EpollHandler
 {public:
-    int notify_fd;
+    int notify_fd; // event_fd
     std::queue<Func> notify_queue;
     std::mutex mutex;
     IOContext* io_context;
